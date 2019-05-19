@@ -4,9 +4,7 @@ from Strix.models.user import User
 from Strix.models.user import Bookmark
 
 
-def create_or_add_relation(user: User, bookmark: Dict) -> Bookmark:
-    url = bookmark.get('url')
-
+def bookmark_create_or_add_relation(user: User, bookmark: Dict) -> Bookmark:
     existing = Bookmark.nodes.get_or_none(url=bookmark.get('url'))
     new_bookmark = existing if existing is not None else Bookmark(url=bookmark.get('url'))
     new_bookmark.save()
@@ -14,3 +12,7 @@ def create_or_add_relation(user: User, bookmark: Dict) -> Bookmark:
     user.bookmarks.connect(new_bookmark)
 
     return new_bookmark
+
+
+def get_bookmark(bookmark_id: str) -> Bookmark:
+    return Bookmark.nodes.get_or_none(uid = bookmark_id)
