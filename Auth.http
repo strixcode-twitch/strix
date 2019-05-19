@@ -1,0 +1,21 @@
+POST http://0.0.0.0:5000/auth
+Content-Type: application/json
+
+{
+  "email": "sindre@downgoat.net",
+  "password": "secret"
+}
+
+> {% client.global.set("auth_token", response.body.access_token); %}
+
+###
+### Bad token
+GET http://0.0.0.0:5000/protected
+
+
+###
+### Good token
+GET http://0.0.0.0:5000/protected
+Authorization: Bearer {{auth_token}}
+
+###

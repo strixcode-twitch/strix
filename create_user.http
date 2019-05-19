@@ -1,0 +1,11 @@
+POST http://0.0.0.0:5000/create_user
+Content-Type: application/json
+
+{
+  "first_name": "Sindre",
+  "last_name": "Smistad",
+  "email": "sindre@downgoat.net",
+  "password": "secret"
+}
+
+###
