@@ -1,11 +1,12 @@
 import graphene
 
+from Strix.models.folder import Folder
+
 
 def resolve_subfolders(self, info: graphene.ResolveInfo, **args):
-    return []
+    parent: Folder = Folder.nodes.get_or_none(uid=self.id)
 
-
-
+    return [FolderType(**x.get_gql_node()) for x in parent.children]
 
 
 class FolderType(graphene.ObjectType):

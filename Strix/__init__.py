@@ -32,8 +32,7 @@ async def post_create_user(request):
     user: RestUserInput = RestUserInput(**request.json)
 
     user_id = create_user(user)
-    #user = User(first_name='John', last_name='Smith', email='asd@asd.com', password='secret')
-    #user.save()
+
     return json({"hello": "world"})
 
 

@@ -1,6 +1,7 @@
 import graphene
 
 from Strix.schema.resolvers.bookmark_resolvers import resolve_bookmarks, CreateBookmark
+from Strix.schema.resolvers.folder_resolvers import resolve_root_folder, CreateFolder, resolve_folder
 from Strix.schema.resolvers.tag_resolver import CreateTag
 from Strix.schema.resolvers.user_resolvers import resolve_user
 from Strix.schema.types.bookmark_type import BookmarkTypeConnection
@@ -8,8 +9,6 @@ from Strix.schema.types.folder_type import FolderType
 from Strix.schema.types.user_type import UserType
 from Strix.services.user_service import get_current_user
 
-def resolve_root_folder(self, info: graphene.ResolveInfo, **args):
-    return None
 
 class Me(graphene.ObjectType):
     """ My objects """
@@ -26,7 +25,7 @@ class Me(graphene.ObjectType):
         BookmarkTypeConnection, description='Your bookmarks!', resolver=resolve_bookmarks
     )
 
-    root_folder = graphene.Field(FolderType)
+    root_folder = graphene.Field(FolderType, resolver=resolve_root_folder)
 
     def resolve_full_name(root, info, **args):
         return '{} {}'.format(root.first_name, root.last_name)
@@ -40,6 +39,7 @@ class Query(graphene.ObjectType):
     user = graphene.Field(lambda: UserType, resolver=resolve_user)
 
     me = graphene.Field(Me)
+    folder = graphene.Field(FolderType, resolver=resolve_folder, folder_id=graphene.ID())
     node = graphene.relay.Node.Field()
 
     def resolve_me(self, info, **args):
@@ -50,9 +50,7 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     create_bookmark = CreateBookmark.Field()
     create_tag = CreateTag.Field()
+    create_folder = CreateFolder.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
-
-
-

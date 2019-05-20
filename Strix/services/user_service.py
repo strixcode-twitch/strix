@@ -1,6 +1,8 @@
+from Strix.models.folder import Folder
 from Strix.models.user import User
 from Strix.dtos.rest_user_input import RestUserInput
 from passlib.hash import argon2
+
 
 def create_user(user: RestUserInput):
     existing = User.nodes.get_or_none(email=user.email)
@@ -11,6 +13,10 @@ def create_user(user: RestUserInput):
     new_user.password = hash_password(user.password)
     # TODO hash passsword
     new_user.save()
+
+    root_folder = Folder(name='root').save()
+    new_user.folders.connect(root_folder)
+
     return new_user.uid
 
 
