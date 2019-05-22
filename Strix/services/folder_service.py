@@ -49,7 +49,8 @@ def get_folder(user_id: str, folder_id: str) -> Folder:
 
 
 def is_folder_connected_to_user(user_id: str, folder_id: str):
-    results, _ = db.cypher_query(
-        f'match (u:User {{uid: "{user_id}"}})-[:ROOT_FOLDER]->(:Folder)-[:HAS_FOLDER*1..]->(f:Folder {{uid: "{folder_id}"}}) return u,f', )
+    # TODO log statement
+    query = f'match (u:User {{uid: "{user_id}"}})-[:ROOT_FOLDER]->(:Folder)-[:HAS_FOLDER*1..]->(f:Folder {{uid: "{folder_id}"}}) return u,f'
+    results, _ = db.cypher_query(query, )
 
     return len(results) != 0

@@ -21,10 +21,18 @@ def resolve_bookmarks(self, info, **args) -> List[BookmarkType]:
 class CreateBookmark(graphene.Mutation):
     class Arguments:
         bookmark = BookmarkInputType(required=True)
+        tags = graphene.List(graphene.String)
+        folder_id = graphene.ID(description="Id of the folder you want to place this bookmark in, defaults to root folder.")
 
     Output = BookmarkType
 
     def mutate(self, info, bookmark: BookmarkInputType, **args):
         user = get_current_user(args.get('user_id'))
-        entity = bookmark_create_or_add_relation(user, {"url": bookmark.url})
+        entity: Bookmark = bookmark_create_or_add_relation(
+            user,
+            {"url": bookmark.url},
+            args.get('tags', []),
+            args.get('folder_id', None)
+        )
+
         return BookmarkType(**entity.get_gql_node())
