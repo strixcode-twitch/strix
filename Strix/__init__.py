@@ -1,5 +1,6 @@
 from sanic import Sanic
 from sanic.response import json
+from sanic_cors import CORS
 from sanic_graphql import GraphQLView
 from sanic_jwt import Initialize, protected, inject_user
 
@@ -11,6 +12,7 @@ from Strix.services.user_service import create_user
 
 app = Sanic()
 Initialize(app, authenticate=authenticate, retrieve_user=retrieve_user, configuration_class=SanicConfiguration)
+CORS(app)
 
 from neomodel import config
 config.DATABASE_URL = 'bolt://neo4j:123qwe@localhost:7687' # TODO move to setting file.
